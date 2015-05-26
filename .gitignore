@@ -1,0 +1,13 @@
+# vim
+*.sw*
+*~
+
+# c++/cmake
+build/
+CMakeCache.txt
+CMakeFiles/
+*.exe
+*.so
+*.lib
+*.a
+
