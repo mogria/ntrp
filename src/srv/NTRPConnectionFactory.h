@@ -3,11 +3,14 @@
 
 #include <Poco/Net/TCPServerConnectionFactory.h>
 #include "NTRPConnection.h"
+#include <lib/ModelHandler.h>
 
 namespace ntrp {
 namespace srv {
 
 class NTRPConnectionFactory : public ::Poco::Net::TCPServerConnectionFactory {
+    private:
+        ::ntrp::model::ModelHandler &db;
     public:
         NTRPConnectionFactory() { }
         virtual ~NTRPConnectionFactory() { }

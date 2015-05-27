@@ -6,6 +6,9 @@
 #include <Poco/Net/TCPServer.h>
 #include <Poco/Net/ServerSocket.h>
 
+#include <lib/ModelHandler.h>
+#include <Poco/Data/SQLite/Connector.h>
+
 #include "NTRPConnectionFactory.h"
 
 namespace ntrp {
@@ -58,6 +61,10 @@ int NTRPServerApplication::main(const ::std::vector<std::string> &args) {
         helpFormatter.format(std::cout);
         return ::Poco::Util::Application::EXIT_OK;
     }
+
+    ::Poco::Data::SQLite::Connector::registerConnector();
+    ::Poco::Data::Session session("SQLite", "sample.db");
+    ::ntrp::model::ModelHandler db(session);
 
     unsigned short port = (unsigned short)config().getInt("NTRPServer.port", 37011);
 

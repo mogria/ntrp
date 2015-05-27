@@ -44,11 +44,25 @@ class NTRPConnection : public ::Poco::Net::TCPServerConnection {
         }
 
         void handleCommand(const std::string command, Poco::JSON::Object::Ptr arguments) {
-            std::string text;
-            arguments->get("text").convert<std::string>(text);
-            Poco::JSON::Object::Ptr object = new Poco::JSON::Object;
-            object->set("text", text);
-            sendCommandResponse(command, object);
+            Poco::JSON::Object::Ptr results;
+            if(command == "register") results = registerCommand(arguments);
+            if(command == "login") results = registerCommand(arguments);
+            else                      results = unknownCommnad;
+            sendCommandResponse(command, results);
+        }
+
+        void registerCommand(Poco::JSON::Object::Ptr arguments) {
+            Poco::JSON::Object::Ptr result = new Poco::JSON::Object;
+            ntrp::model::Player newPlayer;
+            newPlayer.name = arguments->get("name").convert<std::string>(text);
+            object->set("success", true);
+            return result;
+        }
+
+        void loginCommand(Poco::JSON::Object::Ptr arguments) {
+            Poco::JSON::Object::Ptr result = new Poco::JSON::Object;
+            object->set("error", true);
+            return result;
         }
 
         void run() {
