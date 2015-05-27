@@ -7,6 +7,9 @@
 #include <Poco/Net/SocketAddress.h>
 #include <iostream>
 #include <lib/JSON.h>
+#include <lib/Player.h>
+#include <lib/ModelHandler.h>
+#include <Poco/Data/SQLite/Connector.h>
 
 class NTRPClient : public ::Poco::Util::Application {
 private:
@@ -86,7 +89,13 @@ protected:
             displayHelp();
             return ::Poco::Util::Application::EXIT_OK;
 		}
-
+        ::Poco::Data::SQLite::Connector::registerConnector();
+        ::Poco::Data::Session session("SQLite", "sample.db");
+        ::ntrp::model::ModelHandler db(session);
+        db.createTable(::ntrp::model::Player::modelInfo);
+        ::ntrp::model::Player player;
+        player.name = "Mogria";
+        db.save(player);
         unsigned short port = (unsigned short)config().getInt("NTRPClient.port", 37011);
         ::Poco::Net::SocketAddress address(port);
         socket.connect(address);
